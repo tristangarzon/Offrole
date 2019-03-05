@@ -1,0 +1,136 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class MenuManager : MonoBehaviour
+{
+
+    public int state = 0;
+    public GUIStyle SubText;
+    public GUIStyle Header;
+
+
+
+    // public string OneVOneMap;
+
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
+
+    //Player has Joined a Lobby
+    void OnJoinedLobby()
+    {
+        state = 2;
+    }
+
+    //If Failed, restarts
+    void OnJoinedLobbyFailed()
+    {
+        state = 0;
+    }
+
+    //If unable to join a lobby
+    //It will create a new room
+    void OnPhotonRandomJoinFailed()
+    {
+        PhotonNetwork.CreateRoom(null);
+    }
+
+    //Player has sucessful created a room
+    void OnJoinedRoom()
+    {
+        state = 4;
+    }
+
+
+
+    void OnGUI()
+    {
+
+        switch (state)
+        {
+            case 0:
+                // MENU
+
+                GUI.Label(new Rect(10, 10, 200, 30), "Welcome to Off-role", SubText);
+                GUI.Label(new Rect(10, 30, 200, 30), "Server Status: Online", SubText);
+
+                if (GUI.Button(new Rect((Screen.width / 2) - 25, 70, 100, 30), "Play"))
+                {
+                    state = 1;
+                    PhotonNetwork.ConnectUsingSettings("1.0");
+                }
+                break;
+
+            case 1:
+                // Connect to Server
+
+                GUI.Label(new Rect((Screen.width / 2) - 50, Screen.height / 2, 100, 40), "Connecting to Server...", SubText);
+                break;
+
+         
+
+            case 2:
+                // Pick Game Type
+
+               if (GUI.Button(new Rect((Screen.width / 2) - 100, Screen.height / 2, 200, 30), "1v1"))
+                {
+                    state = 3;
+                    PhotonNetwork.JoinRandomRoom();
+                }
+
+                //I will need to make  a new case to redirect players to the 3v3 map rather than the 1v1 map
+                if (GUI.Button(new Rect((Screen.width / 2) - 100, (Screen.height / 2) - 40, 200, 30), "3V3 - Capture The Flag"))
+                {
+                    state = 3;
+                    PhotonNetwork.JoinRandomRoom();
+                }
+
+                break;
+            case 3:
+                // Search for 5v5 Game
+
+                GUI.Label(new Rect((Screen.width / 2) - 50, Screen.height / 2, 100, 40), "Searching for Players...", SubText);
+                break;
+
+
+            case 4:
+                //Game Found, Waiting for Full Lobby
+
+                //Change Player List Legth based off how many players I want to be in the lobby before the game starts
+
+                if (PhotonNetwork.playerList.Length == 1 & PhotonNetwork.isMasterClient == true)
+                {
+                    this.GetComponent<PhotonView>().RPC("StartGame", PhotonTargets.All);
+                }
+
+                break;
+
+
+
+
+                break;
+            case 5:
+                // In-Game
+
+                break;
+
+     
+ 
+        }
+
+    }
+    //Loads 1v1 Map
+    [PunRPC]
+    public void StartGame()
+    {
+        state = 5;
+        SceneManager.LoadScene(1);
+        
+    }
+}
+
