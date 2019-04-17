@@ -1,62 +1,43 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
-public class Bullet : MonoBehaviour
+
+[RequireComponent(typeof(Rigidbody))]
+public class AoE : MonoBehaviour
 {
-
-    private Transform target;
-
-    public float speed = 70f;
-
-    public GameObject impactEffect;
-
-    //
-    public float BaseDamage;
+    public Spell Ability;
+    public Vector3 StartPos;
+    public Vector3 CurrPos;
+    public float Speed;
+    public Rigidbody RBody;
+    public string OwnerTag;
+    public float CurrTime = 0;
 
 
 
 
-    public void Seek (Transform _target)
+
+    private void Start()
     {
-        target = _target;
+        RBody = GetComponent<Rigidbody>();
+        StartPos = transform.position;
+    }
+
+    private void Update()
+    {
+
+       
+
+            CurrTime += Time.deltaTime;
+            if (CurrTime >= Ability.SpellTime)
+            {
+                Destroy(gameObject);
+            }
+
     }
 
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (target == null)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-
-        Vector3 dir = target.position - transform.position;
-        float distanceThisFrame = speed * Time.deltaTime;
-
-        if(dir.magnitude <= distanceThisFrame)
-        {
-            HitTarget();
-            return;
-        }
-
-        transform.Translate(dir.normalized * distanceThisFrame, Space.World);
-
-
-    }
-
-    void HitTarget()
-    {
-        GameObject effectIns = Instantiate(impactEffect, transform.position, transform.rotation);
-
-
-        Destroy(effectIns, 2f);
-        
-        Destroy(gameObject);
-
-    }
 
 
 
@@ -68,14 +49,14 @@ public class Bullet : MonoBehaviour
             case "Ally":
                 {
 
-                    if (BaseDamage <= 0)
+                    if (Ability.BaseDamage <= 0)
                         return;
 
                     Component comp = other.gameObject.GetComponent(typeof(IDamageable));
 
                     if (comp)
                     {
-                        (comp as IDamageable).ChangeHealth(BaseDamage, GameConsts.ATTACK_TYPES.PHYICAL);
+                        (comp as IDamageable).ChangeHealth(Ability.BaseDamage, GameConsts.ATTACK_TYPES.PHYICAL);
 
                     }
                     Destroy(gameObject);
@@ -85,48 +66,45 @@ public class Bullet : MonoBehaviour
             case "Enemy":
                 {
 
-                    if (BaseDamage >= 0)
+                    if (Ability.BaseDamage >= 0)
                         return;
                     Component comp = other.gameObject.GetComponent(typeof(IDamageable));
 
                     if (comp)
                     {
-                        (comp as IDamageable).ChangeHealth(BaseDamage, GameConsts.ATTACK_TYPES.PHYICAL);
+                        (comp as IDamageable).ChangeHealth(Ability.BaseDamage, GameConsts.ATTACK_TYPES.PHYICAL);
 
                     }
                     Destroy(gameObject);
 
                     break;
                 }
-
-
             case "RedTeam":
                 {
 
-                    if (BaseDamage >= 0)
+                    if (Ability.BaseDamage <= 0)
                         return;
                     Component comp = other.gameObject.GetComponent(typeof(IDamageable));
 
                     if (comp)
                     {
-                        (comp as IDamageable).ChangeHealth(BaseDamage, GameConsts.ATTACK_TYPES.PHYICAL);
+                        (comp as IDamageable).ChangeHealth(Ability.BaseDamage, GameConsts.ATTACK_TYPES.PHYICAL);
 
                     }
                     Destroy(gameObject);
 
                     break;
                 }
-
             case "BlueTeam":
                 {
 
-                    if (BaseDamage >= 0)
+                    if (Ability.BaseDamage <= 0)
                         return;
                     Component comp = other.gameObject.GetComponent(typeof(IDamageable));
 
                     if (comp)
                     {
-                        (comp as IDamageable).ChangeHealth(BaseDamage, GameConsts.ATTACK_TYPES.PHYICAL);
+                        (comp as IDamageable).ChangeHealth(Ability.BaseDamage, GameConsts.ATTACK_TYPES.PHYICAL);
 
                     }
                     Destroy(gameObject);
@@ -135,7 +113,10 @@ public class Bullet : MonoBehaviour
                 }
 
 
-
+            case "Ground":
+                {
+                    break;
+                }
 
             default:
                 {
@@ -144,8 +125,5 @@ public class Bullet : MonoBehaviour
                 }
         }
     }
-
-
-
 
 }

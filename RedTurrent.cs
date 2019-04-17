@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Turrent : MonoBehaviour
+public class RedTurrent : MonoBehaviour
 {
+
+
     public Transform target;
 
     [Header("Attributes")]
@@ -25,18 +27,19 @@ public class Turrent : MonoBehaviour
     public float turnSpeed = 10f;
 
     //Tag list for enemies
-    public string enemyTag = "Enemy";
+    public string enemyTag = "BlueTeam";
 
     public GameObject bulletPrefab;
     public Transform firePoint;
 
 
+   
     void Start()
     {
         InvokeRepeating("UpdateTarget", 0f, 0.5f);
     }
 
-    void UpdateTarget ()
+    void UpdateTarget()
     {
         GameObject[] enemies = GameObject.FindGameObjectsWithTag(enemyTag);
         float shortestDistance = Mathf.Infinity;
@@ -56,11 +59,11 @@ public class Turrent : MonoBehaviour
         if (nearestEnemy != null && shortestDistance <= range)
         {
             target = nearestEnemy.transform;
-        }else
+        }
+        else
         {
             target = null;
         }
-
     }
 
     void Update()
@@ -83,6 +86,8 @@ public class Turrent : MonoBehaviour
         fireCountdown -= Time.deltaTime;
     }
 
+
+
     void Shoot()
     {
         GameObject bulletGO = (GameObject)Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
@@ -99,7 +104,4 @@ public class Turrent : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, range);
     }
-
-    
-
 }

@@ -1,11 +1,11 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class RecievedMovement : MonoBehaviour
 {
-    public NavMeshAgent nav;
+    private NavMeshAgent nav;
 
 
     Vector3 newposition;
@@ -14,20 +14,36 @@ public class RecievedMovement : MonoBehaviour
 
     public GameObject graphics;
 
-    //Animations
-    private bool mRunning = false;
+    private Animator anim;
+
+    private bool Walk = false;
+
+
+
 
 
     void Start()
     {
         nav = GetComponent<NavMeshAgent>();
         newposition = this.transform.position;
+        anim = GetComponent<Animator>();
 
     }
 
 
     void Update()
     {
+
+
+        if (nav.remainingDistance <= nav.stoppingDistance)
+        {
+            Walk = false;
+        }
+        else
+        {
+            Walk = true;
+        }
+
         /*
         if (Vector3.Distance(newposition, this.transform.position) > walkRange)
         {
@@ -43,12 +59,17 @@ public class RecievedMovement : MonoBehaviour
             nav.destination = newposition;
         }
 
+        anim.SetBool("Walk", Walk);
+
+
+
     }
 
     //Movement
     [PunRPC]
     public void RecievedMove(Vector3 movePos)
     {
+     
         newposition = movePos;
     }
 

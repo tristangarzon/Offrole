@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Turrent : MonoBehaviour
+public class BlueMinionAttack : MonoBehaviour
 {
     public Transform target;
 
@@ -25,7 +25,7 @@ public class Turrent : MonoBehaviour
     public float turnSpeed = 10f;
 
     //Tag list for enemies
-    public string enemyTag = "Enemy";
+    public string enemyTag = "RedTeam";
 
     public GameObject bulletPrefab;
     public Transform firePoint;
@@ -36,7 +36,8 @@ public class Turrent : MonoBehaviour
         InvokeRepeating("UpdateTarget", 0f, 0.5f);
     }
 
-    void UpdateTarget ()
+
+    void UpdateTarget()
     {
         GameObject[] enemies = GameObject.FindGameObjectsWithTag(enemyTag);
         float shortestDistance = Mathf.Infinity;
@@ -56,12 +57,13 @@ public class Turrent : MonoBehaviour
         if (nearestEnemy != null && shortestDistance <= range)
         {
             target = nearestEnemy.transform;
-        }else
+        }
+        else
         {
             target = null;
         }
-
     }
+
 
     void Update()
     {
@@ -99,7 +101,4 @@ public class Turrent : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, range);
     }
-
-    
-
 }

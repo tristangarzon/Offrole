@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -53,6 +53,22 @@ public class GameManager : MonoBehaviour {
                     state = 1;
                     PhotonNetwork.ConnectUsingSettings("1.0");
                 }
+
+
+                if (GUI.Button(new Rect(40, 150, 200, 20), "Juggernaut"))
+                {
+                    SpawnPlayer(0, "Juggernaut");
+                    state = 1;
+                    PhotonNetwork.ConnectUsingSettings("1.0");
+                }
+
+                if (GUI.Button(new Rect(40, 200, 200, 20), "Berserker"))
+                {
+                    SpawnPlayer(0, "Warrior");
+                    state = 1;
+                    PhotonNetwork.ConnectUsingSettings("1.0");
+                }
+
 
                 break;
 

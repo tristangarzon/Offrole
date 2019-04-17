@@ -1,15 +1,16 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class SendInfo : MonoBehaviour
 {
 
-   
+
+
 
     void Start()
     {
-      
+
     }
 
 
@@ -32,11 +33,14 @@ public class SendInfo : MonoBehaviour
 
         }
 
+
     }
 
     //Movement
     void Send(Vector3 hitPoint)
     {
+    
+
         this.GetComponent<PhotonView>().RPC("RecievedMove", PhotonTargets.AllBuffered, hitPoint);
     }
 
